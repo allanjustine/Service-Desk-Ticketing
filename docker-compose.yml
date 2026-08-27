@@ -58,7 +58,6 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE:-it_ticketing}
       MYSQL_USER: ${DB_USERNAME:-it_ticketing}
       MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD in .env}
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
