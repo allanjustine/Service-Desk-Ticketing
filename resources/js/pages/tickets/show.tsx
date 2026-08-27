@@ -44,7 +44,7 @@ export default function ShowTicket({
 
     return (
         <>
-            <Head title={`Ticket #${ticket.id}`} />
+            <Head title={`${ticket.concern}`} />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
                 <nav className="mx-auto flex max-w-4xl items-center justify-between">
                     <Link
