@@ -29,11 +29,11 @@ FROM php-base AS app
 WORKDIR /var/www/html
 
 COPY --from=vendor /app/vendor ./vendor
-COPY --from=frontend /var/www/html/public/build ./public/build
+COPY --from=frontend /var/www/html/public/build /opt/public-build
 COPY . .
 
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache public/build
+    && chown -R www-data:www-data storage bootstrap/cache
 
 COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod +x /usr/local/bin/entrypoint
