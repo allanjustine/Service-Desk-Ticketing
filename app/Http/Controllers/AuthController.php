@@ -53,7 +53,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return to_route('tickets.create');
+        return to_route('tickets.index');
     }
 
     public function logout(Request $request): RedirectResponse
