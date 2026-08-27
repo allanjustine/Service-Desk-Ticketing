@@ -12,9 +12,13 @@ use Inertia\Response;
 
 class TicketController extends Controller
 {
-    public function create(): Response
+    public function create()
     {
         $user = Auth::user();
+
+        if ($user->is_it) {
+            return to_route('tickets.index');
+        }
 
         return Inertia::render('tickets/create', compact('user'));
     }
@@ -28,11 +32,9 @@ class TicketController extends Controller
 
     public function index(): Response
     {
-        $query = Ticket::query()->latest();
-
-        if (! Auth::user()->is_it) {
-            $query->where('user_id', Auth::id());
-        }
+        $query = Ticket::query()
+            ->when(!Auth::user()->is_it, fn($query) => $query->where('user_id', Auth::id()))
+            ->latest();
 
         return Inertia::render('tickets/index', [
             'tickets' => $query->get(),
