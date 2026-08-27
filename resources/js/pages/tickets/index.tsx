@@ -51,7 +51,7 @@ export default function TicketIndex({
 
     return (
         <>
-            <Head title="IT ticket queue" />
+            <Head title="Tickets" />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
                 <nav className="mx-auto flex max-w-6xl items-center justify-between">
                     <Link

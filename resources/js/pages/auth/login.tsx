@@ -49,7 +49,7 @@ export default function Login({
 
     return (
         <AuthLayout
-            title="Welcome back"
+            title="Login"
             subtitle="Sign in to submit and track your support tickets."
         >
             <form onSubmit={submit} className="grid gap-5">

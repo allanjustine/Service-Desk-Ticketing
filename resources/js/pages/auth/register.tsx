@@ -60,7 +60,7 @@ export default function Register({
 
     return (
         <>
-            <Head title="Create your account" />
+            <Head title="Register" />
             <main className="grid min-h-screen place-items-center px-5 py-10">
                 <section className="w-full max-w-md">
                     <Link
