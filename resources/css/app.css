@@ -1,0 +1,73 @@
+@import 'tailwindcss';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@theme {
+    --font-sans:
+        'DM Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+:root {
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    color: #10243e;
+    background: #eef5fb;
+}
+
+body {
+    min-width: 320px;
+    margin: 0;
+    background:
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(255, 207, 70, 0.35),
+            transparent 24rem
+        ),
+        linear-gradient(135deg, #eef5fb 0%, #f8fbfe 48%, #e7f1fa 100%);
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+::selection {
+    color: #10243e;
+    background: #ffcf46;
+}
+
+@layer components {
+    .field {
+        width: 100%;
+        border: 1px solid #cbddec;
+        border-radius: 0.75rem;
+        background: #fbfdff;
+        padding: 0.8rem 0.9rem;
+        color: #10243e;
+        outline: none;
+        transition:
+            border-color 150ms ease,
+            box-shadow 150ms ease;
+    }
+
+    .field:focus {
+        border-color: #0b5cad;
+        box-shadow: 0 0 0 3px rgba(11, 92, 173, 0.14);
+    }
+
+    .action-button {
+        border-radius: 0.65rem;
+        background: #e8f2fb;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.875rem;
+        font-weight: 800;
+        color: #0b5cad;
+    }
+
+    .action-button:hover {
+        background: #d6e9f8;
+    }
+}
