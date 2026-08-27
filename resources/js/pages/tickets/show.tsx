@@ -1,4 +1,4 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePoll } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import {
     create,
@@ -25,15 +25,9 @@ export default function ShowTicket({
     const [notes, setNotes] = useState(ticket.resolution_notes ?? '');
     const [toastOpen, setToastOpen] = useState(false);
 
-    useEffect(() => {
-        const pollingInterval = window.setInterval(() => {
-            router.reload({
-                only: ['ticket'],
-            });
-        }, 10000);
-
-        return () => window.clearInterval(pollingInterval);
-    }, []);
+    usePoll(10000, {
+        only: ['ticket'],
+    });
 
     function saveStatus(status: TicketStatus) {
         router.patch(
