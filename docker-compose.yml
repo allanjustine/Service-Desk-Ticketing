@@ -15,8 +15,6 @@ services:
       REDIS_HOST: redis
       RUN_MIGRATIONS: 'true'
     depends_on:
-      database:
-        condition: service_healthy
       redis:
         condition: service_started
     volumes:
@@ -41,8 +39,6 @@ services:
     depends_on:
       app:
         condition: service_started
-      database:
-        condition: service_healthy
       redis:
         condition: service_started
     volumes:
