@@ -17,12 +17,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'IT Admin',
-            'email' => 'itadmin@gmail.com',
-            'is_it' => true,
-            'branch_name' => 'Head Office',
-            'branch_code' => 'HO',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'itadmin@gmail.com'],
+            [
+                'name' => 'IT Admin',
+                'password' => 'password',
+                'is_it' => true,
+                'branch_name' => 'Head Office',
+                'branch_code' => 'HO',
+            ],
+        );
     }
 }
