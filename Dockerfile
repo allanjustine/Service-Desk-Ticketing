@@ -30,6 +30,9 @@ WORKDIR /var/www/html
 
 COPY --from=vendor /app/vendor ./vendor
 COPY --from=frontend /var/www/html/public/build /opt/public-build
+COPY --from=frontend /var/www/html/public/favicon.ico /opt/public-assets/favicon.ico
+COPY --from=frontend /var/www/html/public/favicon.svg /opt/public-assets/favicon.svg
+COPY --from=frontend /var/www/html/public/apple-touch-icon.png /opt/public-assets/apple-touch-icon.png
 COPY . .
 
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache \
