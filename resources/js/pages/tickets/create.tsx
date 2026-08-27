@@ -166,9 +166,7 @@ export default function CreateTicket({
                                 name="branch_name"
                                 value={form.branch_name}
                                 error={errors.branch_name}
-                                onChange={(value) =>
-                                    updateField('branch_name', value)
-                                }
+                                onChange={() => {}}
                                 readOnly
                             />
                             <Field
@@ -176,12 +174,6 @@ export default function CreateTicket({
                                 name="branch_code"
                                 value={form.branch_code}
                                 error={errors.branch_code}
-                                onChange={(value) =>
-                                    updateField(
-                                        'branch_code',
-                                        value.toUpperCase(),
-                                    )
-                                }
                                 readOnly
                             />
                             <div>
@@ -287,7 +279,7 @@ function Field({
     name: string;
     value: string;
     error?: string;
-    onChange: (value: string) => void;
+    onChange?: (value: string) => void;
     readOnly?: boolean;
 }) {
     return (
@@ -302,7 +294,7 @@ function Field({
                 id={name}
                 name={name}
                 value={value}
-                onChange={(event) => onChange(event.target.value)}
+                onChange={(event) => onChange && onChange(event.target.value)}
                 className="field"
                 readOnly={readOnly}
             />
