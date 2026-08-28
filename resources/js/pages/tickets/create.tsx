@@ -21,6 +21,7 @@ const ticketSchema = z.object({
     anydesk_id: z
         .string()
         .regex(/^\d+$/, 'Use numbers only for the AnyDesk ID.'),
+    urgent: z.boolean(),
 });
 
 type TicketForm = z.infer<typeof ticketSchema>;
@@ -32,6 +33,7 @@ const initialForm: TicketForm = {
     concern: '',
     concern_description: '',
     anydesk_id: '',
+    urgent: false,
 };
 
 export default function CreateTicket({
@@ -48,7 +50,7 @@ export default function CreateTicket({
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [submitted, setSubmitted] = useState(false);
 
-    function updateField(field: keyof TicketForm, value: string) {
+    function updateField(field: keyof TicketForm, value: string | boolean) {
         setForm((current) => ({ ...current, [field]: value }));
         setErrors((current) => ({ ...current, [field]: '' }));
     }
@@ -252,6 +254,28 @@ export default function CreateTicket({
                                 </p>
                                 <ErrorMessage error={errors.anydesk_id} />
                             </div>
+                            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-[#cbddec] bg-[#f8fbfe] px-4 py-4 sm:col-span-2">
+                                <span>
+                                    <span className="block text-sm font-extrabold text-[#294662]">
+                                        Mark as urgent
+                                    </span>
+                                    <span className="mt-1 block text-xs text-[#71849a]">
+                                        Use this when the issue is stopping your
+                                        branch from operating.
+                                    </span>
+                                </span>
+                                <input
+                                    type="checkbox"
+                                    checked={form.urgent}
+                                    onChange={(event) =>
+                                        updateField(
+                                            'urgent',
+                                            event.target.checked,
+                                        )
+                                    }
+                                    className="size-5 accent-[#e45b45]"
+                                />
+                            </label>
                         </div>
                         <button
                             disabled={submitted}
