@@ -51,7 +51,9 @@ export default function TicketIndex({
 
     return (
         <>
-            <Head title="Tickets" />
+            <Head
+                title={`${tickets.length > 0 ? `(${tickets.length}) ` : ''}Tickets`}
+            />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
                 <nav className="mx-auto flex max-w-6xl items-center justify-between">
                     <Link
