@@ -17,7 +17,7 @@ test('a user can register and is logged in', function () {
         'branch_code' => 'NB-01',
     ]);
 
-    $response->assertRedirect(route('tickets.create'));
+    $response->assertRedirect(route('tickets.index'));
     $this->assertAuthenticated();
     expect(User::where('email', 'jamie@example.com')->exists())->toBeTrue();
 });
