@@ -33,7 +33,7 @@ class TicketController extends Controller
     public function index(): Response
     {
         $query = Ticket::query()
-            ->when(! Auth::user()->is_it, fn($query) => $query->where('user_id', Auth::id()))
+            ->when(! Auth::user()->is_it, fn ($query) => $query->where('user_id', Auth::id()))
             ->orderByDesc('urgent')
             ->latest();
 
@@ -61,6 +61,19 @@ class TicketController extends Controller
         $ticket->delete();
 
         return to_route('tickets.index');
+    }
+
+    public function updateUrgency(Request $request, Ticket $ticket): RedirectResponse
+    {
+        abort_unless(Auth::user()->is_it || $ticket->user_id === Auth::id(), 403);
+
+        $validated = $request->validate([
+            'urgent' => ['required', 'boolean'],
+        ]);
+
+        $ticket->update($validated);
+
+        return back();
     }
 
     public function updateStatus(Request $request, Ticket $ticket): RedirectResponse
