@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $concern_description
  * @property string $anydesk_id
  * @property string $status
+ * @property bool $urgent
  * @property string|null $resolution_notes
  */
 #[Fillable([
@@ -29,12 +30,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'concern_description',
     'anydesk_id',
     'status',
+    'urgent',
     'resolution_notes',
 ])]
 class Ticket extends Model
 {
     /** @use HasFactory<TicketFactory> */
     use HasFactory, HasUuids;
+
+    protected function casts(): array
+    {
+        return [
+            'urgent' => 'boolean',
+        ];
+    }
 
     public function user(): BelongsTo
     {
