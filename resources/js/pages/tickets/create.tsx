@@ -201,6 +201,7 @@ export default function CreateTicket({
                                     <option>Printer</option>
                                     <option>Internet / Network</option>
                                     <option>Email / Account</option>
+                                    <option>CCTV</option>
                                     <option>Others</option>
                                 </select>
                                 <ErrorMessage error={errors.concern} />
