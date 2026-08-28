@@ -46,7 +46,7 @@ class AuthController extends Controller
             'branch_name' => ['required', 'string', 'unique:users,branch_name', 'max:255'],
             'branch_code' => ['required', 'string', 'unique:users,branch_code', 'uppercase', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => ['required', 'confirmed', 'max:20', 'min:6'],
         ]);
 
         $user = User::create($validated);
