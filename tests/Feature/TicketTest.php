@@ -14,6 +14,7 @@ test('an authenticated user can submit a valid support ticket', function () {
         'concern' => 'Others',
         'concern_description' => 'The workstation cannot connect to the shared drive.',
         'anydesk_id' => '123456789',
+        'urgent' => true,
     ]);
 
     $ticket = Ticket::first();
@@ -22,7 +23,70 @@ test('an authenticated user can submit a valid support ticket', function () {
     expect($ticket)
         ->requester_name->toBe('Jamie Cruz')
         ->user_id->toBe($user->id)
-        ->status->toBe('pending');
+        ->status->toBe('pending')
+        ->urgent->toBeTrue();
+});
+
+test('urgent tickets appear before regular tickets', function () {
+    $itUser = User::factory()->create(['is_it' => true]);
+    $regularTicket = Ticket::factory()->create([
+        'urgent' => false,
+        'created_at' => now()->addMinute(),
+    ]);
+    $urgentTicket = Ticket::factory()->create([
+        'urgent' => true,
+        'created_at' => now(),
+    ]);
+
+    $response = $this->actingAs($itUser)->get(route('tickets.index'));
+
+    $response->assertInertia(fn ($page) => $page
+        ->where('tickets.0.id', $urgentTicket->id)
+        ->where('tickets.1.id', $regularTicket->id));
+});
+
+test('a user can delete their own ticket', function () {
+    $user = User::factory()->create();
+    $ticket = Ticket::factory()->for($user)->create();
+
+    $response = $this->actingAs($user)->delete(route('tickets.destroy', $ticket));
+
+    $response->assertRedirect(route('tickets.index'));
+    expect(Ticket::find($ticket->id))->toBeNull();
+});
+
+test('a user cannot delete another users ticket', function () {
+    $user = User::factory()->create();
+    $ticket = Ticket::factory()->create();
+
+    $response = $this->actingAs($user)->delete(route('tickets.destroy', $ticket));
+
+    $response->assertForbidden();
+    expect(Ticket::find($ticket->id))->not->toBeNull();
+});
+
+test('a user can uncheck urgency on their own ticket', function () {
+    $user = User::factory()->create();
+    $ticket = Ticket::factory()->for($user)->create(['urgent' => true]);
+
+    $response = $this->actingAs($user)->patch(route('tickets.update-urgency', $ticket), [
+        'urgent' => false,
+    ]);
+
+    $response->assertRedirect();
+    expect($ticket->refresh()->urgent)->toBeFalse();
+});
+
+test('a user cannot change urgency on another users ticket', function () {
+    $user = User::factory()->create();
+    $ticket = Ticket::factory()->create(['urgent' => true]);
+
+    $response = $this->actingAs($user)->patch(route('tickets.update-urgency', $ticket), [
+        'urgent' => false,
+    ]);
+
+    $response->assertForbidden();
+    expect($ticket->refresh()->urgent)->toBeTrue();
 });
 
 test('ticket submission validates required fields and anydesk format', function () {
