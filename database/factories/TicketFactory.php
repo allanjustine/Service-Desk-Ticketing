@@ -20,6 +20,7 @@ class TicketFactory extends Factory
             'concern_description' => fake()->sentence(),
             'anydesk_id' => fake()->numerify('#########'),
             'status' => 'pending',
+            'urgent' => false,
             'resolution_notes' => null,
         ];
     }
