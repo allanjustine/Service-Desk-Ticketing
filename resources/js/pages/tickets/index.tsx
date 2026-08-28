@@ -167,7 +167,7 @@ export default function TicketIndex({
                             visibleTickets.map((ticket) => (
                                 <article
                                     key={ticket.id}
-                                    className="rounded-2xl border border-white/80 bg-white p-5 shadow-[0_12px_35px_rgba(37,83,126,0.08)]"
+                                    className={`rounded-2xl border border-white/80 ${ticket.urgent ? 'animate-pulse bg-red-100' : 'bg-white'} p-5 shadow-[0_12px_35px_rgba(37,83,126,0.08)]`}
                                 >
                                     <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-center">
                                         <div className="min-w-0">
@@ -186,6 +186,11 @@ export default function TicketIndex({
                                                 <StatusPill
                                                     status={ticket.status}
                                                 />
+                                                {ticket.urgent && (
+                                                    <span className="rounded-full bg-red-300 px-2.5 py-1 text-xs font-extrabold text-red-950">
+                                                        Urgent
+                                                    </span>
+                                                )}
                                             </div>
                                             <p className="mt-2 text-sm text-[#536a84]">
                                                 {ticket.requester_name} ·{' '}
