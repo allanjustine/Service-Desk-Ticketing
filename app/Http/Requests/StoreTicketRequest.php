@@ -28,6 +28,7 @@ class StoreTicketRequest extends FormRequest
             ])],
             'concern_description' => ['required', 'string', 'min:10', 'max:5000'],
             'anydesk_id' => ['required', 'string', 'max:30', 'regex:/^[0-9]+$/'],
+            'urgent' => ['required', 'boolean'],
         ];
     }
 }
