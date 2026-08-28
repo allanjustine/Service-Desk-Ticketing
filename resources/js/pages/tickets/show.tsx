@@ -1,9 +1,11 @@
 import { Head, Link, router, usePoll } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     create,
+    destroy,
     index,
     updateStatus,
+    updateUrgency,
 } from '@/actions/App/Http/Controllers/TicketController';
 import { Toast } from '@/components/ui/toast';
 import type { Ticket, TicketStatus } from '@/types/ticket';
@@ -40,6 +42,20 @@ export default function ShowTicket({
         navigator.clipboard
             .writeText(ticket.anydesk_id)
             .then(() => setToastOpen(true));
+    }
+
+    function deleteTicket() {
+        if (window.confirm('Delete this ticket? This cannot be undone.')) {
+            router.delete(destroy.url(ticket.id));
+        }
+    }
+
+    function toggleUrgency(urgent: boolean) {
+        router.patch(
+            updateUrgency.url(ticket.id),
+            { urgent },
+            { preserveScroll: true },
+        );
     }
 
     return (
@@ -82,6 +98,22 @@ export default function ShowTicket({
                                 {ticket.status.replace('_', ' ')}
                             </span>
                         </div>
+                        {ticket.urgent && (
+                            <span className="mt-5 inline-flex animate-pulse rounded-lg bg-red-300 px-3 py-2 text-xs font-black text-red-950 uppercase">
+                                Urgent ticket
+                            </span>
+                        )}
+                        <label className="mt-5 flex w-fit cursor-pointer items-center gap-3 rounded-lg bg-white/15 px-3 py-2 text-sm font-bold">
+                            <input
+                                type="checkbox"
+                                checked={ticket.urgent}
+                                onChange={(event) =>
+                                    toggleUrgency(event.target.checked)
+                                }
+                                className="size-5 accent-red-300"
+                            />
+                            Urgent ticket
+                        </label>
                     </div>
                     <div className="mt-5 grid gap-5 md:grid-cols-2">
                         <Info label="Requester" value={ticket.requester_name} />
@@ -124,6 +156,15 @@ export default function ShowTicket({
                                 {ticket.resolution_notes}
                             </p>
                         </div>
+                    ) : null}
+                    {!isIt ? (
+                        <button
+                            type="button"
+                            onClick={deleteTicket}
+                            className="mt-5 rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-extrabold text-red-700 hover:bg-red-50"
+                        >
+                            Delete ticket
+                        </button>
                     ) : null}
                     {isIt ? (
                         <div className="mt-5 rounded-2xl border border-[#cbddec] bg-white p-6">
