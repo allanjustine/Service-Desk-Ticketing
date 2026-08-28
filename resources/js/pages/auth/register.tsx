@@ -14,7 +14,7 @@ const registerSchema = z
             .trim()
             .min(1, 'Branch code is required.'),
         email: z.string().trim().email('Enter a valid email address.'),
-        password: z.string().min(8, 'Use at least 8 characters.'),
+        password: z.string().min(6, 'Use at least 6 characters.'),
         password_confirmation: z.string(),
     })
     .refine((data) => data.password === data.password_confirmation, {
