@@ -2,6 +2,7 @@ import { Head, Link, router, usePoll } from '@inertiajs/react';
 import { useState } from 'react';
 import { logout } from '@/actions/App/Http/Controllers/AuthController';
 import { create, show } from '@/actions/App/Http/Controllers/TicketController';
+import { index as usersIndex } from '@/actions/App/Http/Controllers/UserController';
 import { Toast } from '@/components/ui/toast';
 import type { Ticket, TicketStatus } from '@/types/ticket';
 
@@ -69,6 +70,14 @@ export default function TicketIndex({
                         <span className="hidden text-sm text-[#536a84] sm:inline">
                             {userName}
                         </span>
+                        {isIt && (
+                            <Link
+                                href={usersIndex.url()}
+                                className="rounded-xl border border-[#cbddec] bg-white px-4 py-2.5 text-sm font-extrabold text-[#0b5cad]"
+                            >
+                                Users
+                            </Link>
+                        )}
                         {!isIt && (
                             <Link
                                 href={create.url()}
