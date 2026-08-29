@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/tickets/create')->name('home');
@@ -23,4 +24,8 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
     Route::patch('/tickets/{ticket}/urgency', [TicketController::class, 'updateUrgency'])->name('tickets.update-urgency');
     Route::patch('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])->middleware('it')->name('tickets.update-status');
+    Route::middleware('it')->group(function (): void {
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}/tickets', [UserController::class, 'tickets'])->name('users.tickets');
+    });
 });
