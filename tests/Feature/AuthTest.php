@@ -34,3 +34,22 @@ test('a user can log in and log out', function () {
     $this->post(route('logout'))->assertRedirect(route('login'));
     $this->assertGuest();
 });
+
+test('it admins can view the dashboard with ticket and user totals', function () {
+    $admin = User::factory()->create(['is_it' => true]);
+    User::factory()->count(2)->create();
+    $pending = \App\Models\Ticket::factory()->create(['status' => 'pending', 'user_id' => $admin->id]);
+    \App\Models\Ticket::factory()->create(['status' => 'accepted', 'user_id' => $admin->id]);
+    \App\Models\Ticket::factory()->create(['status' => 'solved', 'user_id' => $admin->id]);
+
+    $this->actingAs($admin)
+        ->get(route('dashboard'))
+        ->assertOk()
+        ->assertInertia(fn($page) => $page
+            ->where('stats.total_tickets', 3)
+            ->where('stats.total_users', 3)
+            ->where('stats.statuses.pending', 1)
+            ->where('stats.statuses.accepted', 1)
+            ->where('stats.statuses.solved', 1)
+            ->where('stats.statuses.needs_travel', 0));
+});
