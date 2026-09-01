@@ -1,9 +1,7 @@
-import { Head, Link, router, usePoll } from '@inertiajs/react';
+import { Head, router, usePoll } from '@inertiajs/react';
 import { useState } from 'react';
 import {
-    create,
     destroy,
-    index,
     updateStatus,
     updateUrgency,
 } from '@/actions/App/Http/Controllers/TicketController';
@@ -70,6 +68,9 @@ export default function ShowTicket({
                             <div>
                                 <p className="text-sm font-bold tracking-[0.18em] text-[#b9ddff] uppercase">
                                     Ticket #{String(ticket.id).padStart(4, '0')}
+                                </p>
+                                <p className="mt-2 text-sm font-bold tracking-[0.18em] text-[#b9ddff] uppercase">
+                                    Ticket Code: {ticket.ticket_code}
                                 </p>
                                 <h1 className="mt-3 text-4xl font-black tracking-[-0.04em]">
                                     {labels[ticket.status]}
