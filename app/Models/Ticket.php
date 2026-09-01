@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'status',
     'urgent',
     'resolution_notes',
+    'ticket_code'
 ])]
 class Ticket extends Model
 {
