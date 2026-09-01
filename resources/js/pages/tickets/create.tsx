@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { z } from 'zod';
+import { AppNav } from '@/components/app-nav';
 import { logout } from '@/actions/App/Http/Controllers/AuthController';
 import { index, store } from '@/actions/App/Http/Controllers/TicketController';
 
@@ -87,32 +88,7 @@ export default function CreateTicket({
         <>
             <Head title="Submit a Ticket" />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
-                <nav className="mx-auto flex max-w-6xl items-center justify-between">
-                    <Link
-                        href={index.url()}
-                        className="flex items-center gap-3 text-sm font-bold tracking-wide text-[#10243e]"
-                    >
-                        <span className="grid size-10 place-items-center rounded-xl bg-[#0b5cad] text-lg text-white shadow-lg shadow-blue-900/15">
-                            IT
-                        </span>
-                        Service desk
-                    </Link>
-                    <div className="flex items-center gap-4">
-                        <Link
-                            href={index.url()}
-                            className="text-sm font-semibold text-[#0b5cad] hover:text-[#073e78]"
-                        >
-                            My tickets <span aria-hidden="true">-&gt;</span>
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={() => router.post(logout.url())}
-                            className="text-sm font-bold text-[#536a84]"
-                        >
-                            Sign out
-                        </button>
-                    </div>
-                </nav>
+                <AppNav />
 
                 <section className="mx-auto grid max-w-6xl gap-8 py-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:py-20">
                     <div className="pt-3">
