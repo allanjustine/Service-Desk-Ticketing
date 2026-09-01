@@ -1,4 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
+import { AppNav } from '@/components/app-nav';
 import { logout } from '@/actions/App/Http/Controllers/AuthController';
 import {
     index as ticketsIndex,
@@ -26,29 +27,7 @@ export default function UserTickets({
         <>
             <Head title={`${user.name}'s Requests`} />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
-                <nav className="mx-auto flex max-w-6xl items-center justify-between">
-                    <Link
-                        href={usersIndex.url()}
-                        className="text-sm font-extrabold text-[#0b5cad]"
-                    >
-                        &lt;- Back to users
-                    </Link>
-                    <div className="flex items-center gap-4">
-                        <Link
-                            href={ticketsIndex.url()}
-                            className="text-sm font-bold text-[#536a84]"
-                        >
-                            Ticket queue
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={() => router.post(logout.url())}
-                            className="text-sm font-bold text-[#536a84]"
-                        >
-                            Sign out
-                        </button>
-                    </div>
-                </nav>
+                <AppNav />
                 <section className="mx-auto max-w-6xl py-12">
                     <p className="text-sm font-extrabold tracking-[0.18em] text-[#0b5cad] uppercase">
                         User requests
