@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Str;
 
 class TicketController extends Controller
 {
@@ -25,7 +26,13 @@ class TicketController extends Controller
 
     public function store(StoreTicketRequest $request): RedirectResponse
     {
-        $ticket = Auth::user()->tickets()->create($request->validated());
+        do {
+            $ticket_code = Str::of("SMCT-")
+                ->append(Str::random(8))
+                ->upper();
+        } while (Ticket::query()->where('ticket_code', $ticket_code)->exists());
+
+        $ticket = Auth::user()->tickets()->create([...$request->validated(), 'ticket_code' => $ticket_code]);
 
         return to_route('tickets.show', $ticket);
     }
@@ -33,7 +40,7 @@ class TicketController extends Controller
     public function index(): Response
     {
         $query = Ticket::query()
-            ->when(! Auth::user()->is_it, fn ($query) => $query->where('user_id', Auth::id()))
+            ->when(! Auth::user()->is_it, fn($query) => $query->where('user_id', Auth::id()))
             ->orderByDesc('urgent')
             ->latest();
 
