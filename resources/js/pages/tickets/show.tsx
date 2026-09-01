@@ -7,6 +7,7 @@ import {
     updateStatus,
     updateUrgency,
 } from '@/actions/App/Http/Controllers/TicketController';
+import { AppNav } from '@/components/app-nav';
 import { Toast } from '@/components/ui/toast';
 import type { Ticket, TicketStatus } from '@/types/ticket';
 
@@ -62,22 +63,7 @@ export default function ShowTicket({
         <>
             <Head title={`${ticket.concern}`} />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
-                <nav className="mx-auto flex max-w-4xl items-center justify-between">
-                    <Link
-                        href={index.url()}
-                        className="text-sm font-extrabold text-[#0b5cad]"
-                    >
-                        &lt;- Back to queue
-                    </Link>
-                    {!isIt && (
-                        <Link
-                            href={create.url()}
-                            className="rounded-xl bg-[#ffcf46] px-4 py-2.5 text-sm font-extrabold text-[#10243e]"
-                        >
-                            + New ticket
-                        </Link>
-                    )}
-                </nav>
+                <AppNav />
                 <section className="mx-auto max-w-4xl py-12">
                     <div className="rounded-4xl bg-[#0b5cad] p-7 text-white shadow-[0_22px_60px_rgba(11,92,173,0.25)] sm:p-10">
                         <div className="flex flex-wrap items-start justify-between gap-5">
