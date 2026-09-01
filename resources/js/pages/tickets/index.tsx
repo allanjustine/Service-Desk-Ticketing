@@ -63,7 +63,7 @@ export default function TicketIndex({
                                 {isIt ? 'Operations' : 'My requests'}
                             </p>
                             <h1 className="mt-3 text-5xl font-black tracking-[-0.04em] text-[#10243e]">
-                                {isIt ? 'IT ticket queue' : 'My tickets'}
+                                {isIt ? 'IT Ticket Queue' : 'My Tickets'}
                             </h1>
                             <p className="mt-3 text-[#536a84]">
                                 Every request, ready for the next helpful

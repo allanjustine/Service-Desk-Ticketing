@@ -55,7 +55,7 @@ export function AppNav({ className = '' }: { className?: string }) {
                     href={ticketsIndex.url()}
                     className={`rounded-lg ${url === ticketsIndex.url() ? 'bg-blue-300 text-[#03315e]' : 'text-[#0b5cad]'} p-2 text-sm font-bold`}
                 >
-                    Ticket queue
+                    Ticket Queue
                 </Link>
                 {!isIt && (
                     <Link
