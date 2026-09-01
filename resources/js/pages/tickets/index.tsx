@@ -1,8 +1,7 @@
-import { Head, Link, router, usePoll } from '@inertiajs/react';
+import { Head, Link, usePoll } from '@inertiajs/react';
 import { useState } from 'react';
-import { logout } from '@/actions/App/Http/Controllers/AuthController';
-import { create, show } from '@/actions/App/Http/Controllers/TicketController';
-import { index as usersIndex } from '@/actions/App/Http/Controllers/UserController';
+import { show } from '@/actions/App/Http/Controllers/TicketController';
+import { AppNav } from '@/components/app-nav';
 import { Toast } from '@/components/ui/toast';
 import type { Ticket, TicketStatus } from '@/types/ticket';
 
@@ -56,45 +55,7 @@ export default function TicketIndex({
                 title={`${tickets.length > 0 ? `(${tickets.length}) ` : ''}Tickets`}
             />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
-                <nav className="mx-auto flex max-w-6xl items-center justify-between">
-                    <Link
-                        href={create.url()}
-                        className="flex items-center gap-3 text-sm font-bold tracking-wide text-[#10243e]"
-                    >
-                        <span className="grid size-10 place-items-center rounded-xl bg-[#0b5cad] text-lg text-white">
-                            IT
-                        </span>
-                        Service desk
-                    </Link>
-                    <div className="flex items-center gap-3">
-                        <span className="hidden text-sm text-[#536a84] sm:inline">
-                            {userName}
-                        </span>
-                        {isIt && (
-                            <Link
-                                href={usersIndex.url()}
-                                className="rounded-xl border border-[#cbddec] bg-white px-4 py-2.5 text-sm font-extrabold text-[#0b5cad]"
-                            >
-                                Users
-                            </Link>
-                        )}
-                        {!isIt && (
-                            <Link
-                                href={create.url()}
-                                className="rounded-xl bg-[#ffcf46] px-4 py-2.5 text-sm font-extrabold text-[#10243e]"
-                            >
-                                + New ticket
-                            </Link>
-                        )}
-                        <button
-                            type="button"
-                            onClick={() => router.post(logout.url())}
-                            className="text-sm font-bold text-[#536a84] hover:text-[#10243e]"
-                        >
-                            Sign out
-                        </button>
-                    </div>
-                </nav>
+                <AppNav />
                 <section className="mx-auto max-w-6xl py-12">
                     <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
                         <div>
