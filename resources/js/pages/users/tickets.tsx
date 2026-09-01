@@ -61,6 +61,9 @@ export default function UserTickets({
                                             </span>
                                         )}
                                     </div>
+                                    <p className="text-lg font-extrabold text-[#10243e] hover:text-[#0b5cad]">
+                                        {ticket.ticket_code}
+                                    </p>
                                     <p className="mt-3 truncate text-sm text-[#71849a]">
                                         {ticket.concern_description}
                                     </p>
