@@ -164,6 +164,9 @@ export default function TicketIndex({
                                                     </span>
                                                 )}
                                             </div>
+                                            <p className="text-lg font-extrabold text-[#10243e] hover:text-[#0b5cad]">
+                                                {ticket.ticket_code}
+                                            </p>
                                             <p className="mt-2 text-sm text-[#536a84]">
                                                 {ticket.requester_name} ·{' '}
                                                 {ticket.branch_name}{' '}
