@@ -1,6 +1,5 @@
-import { Head, Link, router, usePoll } from '@inertiajs/react';
-import { logout } from '@/actions/App/Http/Controllers/AuthController';
-import { index as ticketsIndex } from '@/actions/App/Http/Controllers/TicketController';
+import { Head, Link, usePoll } from '@inertiajs/react';
+import { AppNav } from '@/components/app-nav';
 import { tickets as userTickets } from '@/actions/App/Http/Controllers/UserController';
 
 type UserSummary = {
@@ -21,32 +20,7 @@ export default function UsersIndex({ users }: { users: UserSummary[] }) {
         <>
             <Head title="Users" />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
-                <nav className="mx-auto flex max-w-6xl items-center justify-between">
-                    <Link
-                        href={ticketsIndex.url()}
-                        className="flex items-center gap-3 text-sm font-bold tracking-wide text-[#10243e]"
-                    >
-                        <span className="grid size-10 place-items-center rounded-xl bg-[#0b5cad] text-lg text-white">
-                            IT
-                        </span>
-                        Service desk
-                    </Link>
-                    <div className="flex items-center gap-4">
-                        <Link
-                            href={ticketsIndex.url()}
-                            className="text-sm font-bold text-[#0b5cad]"
-                        >
-                            Ticket queue
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={() => router.post(logout.url())}
-                            className="text-sm font-bold text-[#536a84]"
-                        >
-                            Sign out
-                        </button>
-                    </div>
-                </nav>
+                <AppNav />
                 <section className="mx-auto max-w-6xl py-12">
                     <p className="text-sm font-extrabold tracking-[0.18em] text-[#0b5cad] uppercase">
                         Directory
