@@ -17,6 +17,7 @@ export type Ticket = {
     anydesk_id: string;
     status: TicketStatus;
     urgent: boolean;
+    ticket_code: string;
     resolution_notes: string | null;
     created_at: string;
     updated_at: string;
