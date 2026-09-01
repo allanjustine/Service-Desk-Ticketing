@@ -24,7 +24,7 @@ export default function DashboardPage({ stats }: { stats: DashboardStats }) {
 
     return (
         <>
-            <Head title="Admin dashboard" />
+            <Head title="Admin Dashboard" />
             <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12">
                 <AppNav />
 
