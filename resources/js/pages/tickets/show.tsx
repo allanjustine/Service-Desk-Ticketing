@@ -134,6 +134,67 @@ export default function ShowTicket({
                             {ticket.concern_description}
                         </p>
                     </div>
+                    {ticket.attachments?.length ? (
+                        <div className="mt-5 rounded-2xl bg-white p-6 shadow-[0_12px_35px_rgba(37,83,126,0.08)]">
+                            <p className="text-xs font-extrabold tracking-wider text-[#71849a] uppercase">
+                                Attachments
+                            </p>
+                            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                                {ticket.attachments.map((attachment) => {
+                                    const fileUrl = `/storage/${attachment.file_name}`;
+                                    const isImage =
+                                        attachment.mime_type.startsWith(
+                                            'image/',
+                                        );
+
+                                    return (
+                                        <a
+                                            key={attachment.id}
+                                            href={fileUrl}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="overflow-hidden rounded-2xl border border-[#cbddec] bg-[#f7fbff] text-left transition hover:border-[#9abfe8] hover:bg-[#edf6ff]"
+                                        >
+                                            <div className="bg-[#edf6ff] p-2">
+                                                {isImage ? (
+                                                    <img
+                                                        src={fileUrl}
+                                                        alt={
+                                                            attachment.original_name
+                                                        }
+                                                        className="h-40 w-full rounded-xl object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-[#b9d7f5] bg-white text-center text-xs font-bold text-[#294662]">
+                                                        {
+                                                            attachment.original_name
+                                                        }
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="space-y-2 px-3 py-3">
+                                                <p className="truncate text-sm font-bold text-[#10243e]">
+                                                    {attachment.original_name}
+                                                </p>
+                                                <div className="text-xs text-[#536a84]">
+                                                    <p>
+                                                        Size:{' '}
+                                                        {formatFileSize(
+                                                            attachment.size,
+                                                        )}
+                                                    </p>
+                                                    <p>
+                                                        Type:{' '}
+                                                        {attachment.mime_type}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ) : null}
                     {ticket.resolution_notes ? (
                         <div className="mt-5 rounded-2xl border border-[#ffcf46] bg-[#fffaf0] p-6">
                             <p className="text-xs font-extrabold tracking-wider text-[#8a6500] uppercase">
@@ -219,4 +280,19 @@ function Info({ label, value }: { label: string; value: string }) {
             <p className="mt-2 font-bold text-[#10243e]">{value}</p>
         </div>
     );
+}
+
+function formatFileSize(bytes: number): string {
+    if (bytes === 0) {
+        return '0 B';
+    }
+
+    const units = ['B', 'KB', 'MB', 'GB'];
+    const index = Math.min(
+        Math.floor(Math.log(bytes) / Math.log(1024)),
+        units.length - 1,
+    );
+    const value = bytes / 1024 ** index;
+
+    return `${value.toFixed(value >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
 }
