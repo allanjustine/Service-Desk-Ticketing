@@ -92,9 +92,7 @@ class TicketController extends Controller
     {
         abort_unless($ticket->user_id === Auth::id(), 403);
 
-        foreach ($ticket->attachments as $attachment) {
-            Storage::disk('public')->delete($attachment->file_name);
-        }
+        Storage::disk('public')->delete($ticket->attachments()->pluck('file_name')->toArray());
 
         $ticket->delete();
 
