@@ -24,11 +24,14 @@ class StoreTicketRequest extends FormRequest
                 'Printer',
                 'Internet / Network',
                 'Email / Account',
+                'CCTV',
                 'Others',
             ])],
             'concern_description' => ['required', 'string', 'min:10', 'max:5000'],
             'anydesk_id' => ['required', 'string', 'max:30', 'regex:/^[0-9]+$/'],
-            'urgent' => ['required', 'boolean'],
+            'urgent' => ['required'],
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf', 'max:2048'],
         ];
     }
 }
