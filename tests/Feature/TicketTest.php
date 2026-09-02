@@ -1,7 +1,10 @@
 <?php
 
 use App\Models\Ticket;
+use App\Models\TicketAttachment;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 test('an authenticated user can submit a valid support ticket', function () {
     $user = User::factory()->create();
@@ -147,4 +150,30 @@ test('a regular user cannot update ticket status', function () {
     ]);
 
     $response->assertForbidden();
+});
+
+test('a ticket can store uploaded attachments', function () {
+    Storage::fake('public');
+    $user = User::factory()->create();
+    $file = UploadedFile::fake()->image('screenshot.png', 1200, 800);
+
+    $response = $this->actingAs($user)->post(route('tickets.store'), [
+        'requester_name' => 'Jamie Cruz',
+        'branch_name' => 'North Branch',
+        'branch_code' => 'NB-01',
+        'concern' => 'Computer / Laptop',
+        'concern_description' => 'The workstation cannot connect to the shared drive.',
+        'anydesk_id' => '123456789',
+        'urgent' => false,
+        'attachments' => [$file],
+    ]);
+
+    $response->assertRedirect();
+    $ticket = Ticket::first();
+
+    expect($ticket)->not->toBeNull();
+    expect($ticket->attachments)->toHaveCount(1);
+    expect(TicketAttachment::first()->original_name)->toBe('screenshot.png');
+
+    Storage::disk('public')->assertExists(TicketAttachment::first()->file_name);
 });
