@@ -6,10 +6,12 @@ use App\Http\Requests\StoreTicketRequest;
 use App\Models\Ticket;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Str;
 
 class TicketController extends Controller
 {
@@ -27,12 +29,35 @@ class TicketController extends Controller
     public function store(StoreTicketRequest $request): RedirectResponse
     {
         do {
-            $ticket_code = Str::of("SMCT-")
+            $ticket_code = Str::of('SMCT-')
                 ->append(Str::random(8))
                 ->upper();
         } while (Ticket::query()->where('ticket_code', $ticket_code)->exists());
 
-        $ticket = Auth::user()->tickets()->create([...$request->validated(), 'ticket_code' => $ticket_code]);
+        $validated = $request->validated();
+
+        $ticket = Auth::user()->tickets()->create([
+            ...Arr::except($validated, ['urgent', 'attachments']),
+            'ticket_code' => $ticket_code,
+            'urgent' => $validated['urgent'] === 'true' ? true : false,
+        ]);
+
+        $attachment_data = [];
+
+        foreach ($request->file('attachments', []) as $attachmentFile) {
+            $storedName = Str::uuid()->toString() . '.' . $attachmentFile->getClientOriginalExtension();
+
+            $path = $attachmentFile->storeAs('ticket-attachments', $storedName, 'public');
+
+            $attachment_data[] = [
+                'original_name' => $attachmentFile->getClientOriginalName(),
+                'file_name' => $path,
+                'mime_type' => $attachmentFile->getClientMimeType(),
+                'size' => $attachmentFile->getSize(),
+            ];
+        }
+
+        $ticket->attachments()->createMany($attachment_data);
 
         return to_route('tickets.show', $ticket);
     }
@@ -55,6 +80,8 @@ class TicketController extends Controller
     {
         abort_unless(Auth::user()->is_it || $ticket->user_id === Auth::id(), 403);
 
+        $ticket->load('attachments');
+
         return Inertia::render('tickets/show', [
             'ticket' => $ticket,
             'isIt' => Auth::user()->is_it,
@@ -64,6 +91,10 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket): RedirectResponse
     {
         abort_unless($ticket->user_id === Auth::id(), 403);
+
+        foreach ($ticket->attachments as $attachment) {
+            Storage::disk('public')->delete($attachment->file_name);
+        }
 
         $ticket->delete();
 
