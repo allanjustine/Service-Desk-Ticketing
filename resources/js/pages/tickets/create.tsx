@@ -1,6 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
-import type { FormEvent } from 'react';
-import { useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { AppNav } from '@/components/app-nav';
 import { logout } from '@/actions/App/Http/Controllers/AuthController';
@@ -48,12 +48,54 @@ export default function CreateTicket({
         branch_code: user.branch_code,
         requester_name: user.name,
     }));
+    const [attachments, setAttachments] = useState<File[]>([]);
+    const [attachmentPreviews, setAttachmentPreviews] = useState<
+        Array<{ id: string; name: string; url?: string }>
+    >([]);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [submitted, setSubmitted] = useState(false);
+
+    useEffect(() => {
+        return () => {
+            attachmentPreviews.forEach((preview) => {
+                if (preview.url) {
+                    URL.revokeObjectURL(preview.url);
+                }
+            });
+        };
+    }, [attachmentPreviews]);
 
     function updateField(field: keyof TicketForm, value: string | boolean) {
         setForm((current) => ({ ...current, [field]: value }));
         setErrors((current) => ({ ...current, [field]: '' }));
+    }
+
+    function handleAttachmentChange(event: ChangeEvent<HTMLInputElement>) {
+        const nextFiles = Array.from(event.target.files ?? []);
+        const previews = nextFiles.map((file) => ({
+            id: `${file.name}-${file.lastModified}-${file.size}`,
+            name: file.name,
+            url: file.type.startsWith('image/')
+                ? URL.createObjectURL(file)
+                : undefined,
+        }));
+
+        setAttachments(nextFiles);
+        setAttachmentPreviews(previews);
+        setErrors((current) => ({ ...current, attachments: '' }));
+        event.target.value = '';
+    }
+
+    function removeAttachment(index: number) {
+        const nextAttachments = attachments.filter(
+            (_, itemIndex) => itemIndex !== index,
+        );
+        const nextPreviews = attachmentPreviews.filter(
+            (_, itemIndex) => itemIndex !== index,
+        );
+
+        setAttachments(nextAttachments);
+        setAttachmentPreviews(nextPreviews);
     }
 
     function submit(event: FormEvent<HTMLFormElement>) {
@@ -75,8 +117,17 @@ export default function CreateTicket({
             return;
         }
 
+        const formData = new FormData();
+        Object.entries(result.data).forEach(([key, value]) => {
+            formData.append(key, String(value));
+        });
+        attachments.forEach((file) => {
+            formData.append('attachments[]', file);
+        });
+
         setSubmitted(true);
-        router.post(store.url(), result.data, {
+        router.post(store.url(), formData, {
+            forceFormData: true,
             onError: (serverErrors) => {
                 setSubmitted(false);
                 setErrors(serverErrors as Record<string, string>);
@@ -230,6 +281,63 @@ export default function CreateTicket({
                                     you.
                                 </p>
                                 <ErrorMessage error={errors.anydesk_id} />
+                            </div>
+                            <div className="sm:col-span-2">
+                                <label
+                                    htmlFor="attachments"
+                                    className="mb-2 block text-sm font-bold text-[#294662]"
+                                >
+                                    Attachments (optional)
+                                </label>
+                                <input
+                                    id="attachments"
+                                    type="file"
+                                    multiple
+                                    accept="image/*,.pdf"
+                                    onChange={handleAttachmentChange}
+                                    className="field file:mr-4 file:rounded-md file:border-0 file:bg-[#e8f2fb] file:px-3 file:py-2 file:text-sm file:font-bold file:text-[#0b5cad]"
+                                />
+                                {attachments.length > 0 ? (
+                                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                        {attachmentPreviews.map(
+                                            (preview, index) => (
+                                                <div
+                                                    key={preview.id}
+                                                    className="relative overflow-hidden rounded-2xl border border-[#cbddec] bg-[#f8fbfe]"
+                                                >
+                                                    {preview.url ? (
+                                                        <img
+                                                            src={preview.url}
+                                                            alt={preview.name}
+                                                            className="h-28 w-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="flex h-28 items-center justify-center bg-[#edf6ff] px-3 text-center text-xs font-bold text-[#294662]">
+                                                            {preview.name}
+                                                        </div>
+                                                    )}
+                                                    <div className="flex items-center justify-between gap-2 border-t border-[#dfeaf6] bg-white px-3 py-2">
+                                                        <span className="truncate text-xs font-semibold text-[#294662]">
+                                                            {preview.name}
+                                                        </span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                removeAttachment(
+                                                                    index,
+                                                                )
+                                                            }
+                                                            className="rounded-md border border-red-200 bg-red-50 px-2 py-1 text-[10px] font-bold text-red-700"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ),
+                                        )}
+                                    </div>
+                                ) : null}
+                                <ErrorMessage error={errors.attachments} />
                             </div>
                             <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-[#cbddec] bg-[#f8fbfe] px-4 py-4 sm:col-span-2">
                                 <span>
