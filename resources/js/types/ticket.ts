@@ -7,6 +7,17 @@ export const ticketStatuses = [
 
 export type TicketStatus = (typeof ticketStatuses)[number];
 
+export type TicketAttachment = {
+    id: number;
+    ticket_id: string;
+    original_name: string;
+    file_name: string;
+    mime_type: string;
+    size: number;
+    created_at: string;
+    updated_at: string;
+};
+
 export type Ticket = {
     id: string;
     requester_name: string;
@@ -19,6 +30,7 @@ export type Ticket = {
     urgent: boolean;
     ticket_code: string;
     resolution_notes: string | null;
+    attachments: TicketAttachment[];
     created_at: string;
     updated_at: string;
 };
