@@ -13,6 +13,7 @@ class TicketFactory extends Factory
     public function definition(): array
     {
         return [
+            'ticket_code' => fake()->unique()->regexify('SMCT-[A-Z0-9]{8}'),
             'requester_name' => fake()->name(),
             'branch_name' => fake()->company(),
             'branch_code' => fake()->numerify('BR-###'),
