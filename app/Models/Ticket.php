@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Database\Factories\TicketFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -21,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $status
  * @property bool $urgent
  * @property string|null $resolution_notes
+ * @property Collection<int, TicketAttachment> $attachments
  */
 #[Fillable([
     'requester_name',
@@ -32,7 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'status',
     'urgent',
     'resolution_notes',
-    'ticket_code'
+    'ticket_code',
 ])]
 class Ticket extends Model
 {
@@ -49,5 +52,10 @@ class Ticket extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(TicketAttachment::class);
     }
 }
