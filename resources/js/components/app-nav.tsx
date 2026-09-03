@@ -67,7 +67,13 @@ export function AppNav({ className = '' }: { className?: string }) {
                 )}
                 <button
                     type="button"
-                    onClick={() => router.post(logout.url())}
+                    onClick={() => {
+                        if (
+                            window.confirm('Are you sure you want to logout?')
+                        ) {
+                            router.post(logout.url());
+                        }
+                    }}
                     className="text-sm font-bold text-[#536a84]"
                 >
                     Sign out
