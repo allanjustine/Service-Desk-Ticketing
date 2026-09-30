@@ -46,7 +46,7 @@ export default function UserTickets({
                                     href={show.url(ticket.id)}
                                     className={`rounded-2xl border border-white/80 ${ticket.urgent ? 'animate-pulse bg-red-100' : 'bg-white'} p-5 shadow-[0_12px_35px_rgba(37,83,126,0.08)] hover:border-[#9eb8cf]`}
                                 >
-                                    <div className="flex flex-wrap items-center justify-between gap-3">
+                                    <div className="flex flex-wrap items-center gap-3">
                                         <span className="text-lg font-extrabold text-[#10243e]">
                                             #
                                             {String(ticket.id).padStart(4, '0')}{' '}
